@@ -1,0 +1,109 @@
+[global_config]
+  dbus = False
+  borderless = True
+  suppress_multiple_term_dialog = True
+  always_split_with_profile = True
+  title_use_system_font = False
+  title_font = Sans 10
+[keybindings]
+[profiles]
+  [[default]]
+    icon_bell = False
+    background_color = "#1a1919"
+    background_darkness = 0.83
+    background_type = transparent
+    cursor_color = "#ffab55"
+    font = Monospace 10
+    foreground_color = "#9edb9e"
+    show_titlebar = False
+    scrollbar_position = hidden
+    scrollback_lines = 1000
+    use_system_font = False
+  [[blueish]]
+    icon_bell = False
+    background_color = "#0b2e4b"
+    background_darkness = 0.9
+    background_type = transparent
+    cursor_color = "#aaaaaa"
+    font = Monospace 10
+    foreground_color = "#7d979c"
+    show_titlebar = False
+    scrollbar_position = hidden
+    scrollback_lines = 1000
+    use_system_font = False
+[layouts]
+  [[default]]
+    [[[child1]]]
+      command = ""
+      directory = ""
+      parent = window0
+      profile = blueish
+      type = Terminal
+    [[[window0]]]
+      parent = ""
+      type = Window
+  [[aw]]
+    [[[child0]]]
+      fullscreen = False
+      last_active_term = e589e2ce-9ce7-4026-b774-6d097e2ce0b3
+      last_active_window = True
+      maximised = True
+      order = 0
+      parent = ""
+      position = 0:29
+      size = 1600, 871
+      title = martin@isaz: ~/projects/activitywatch
+      type = Window
+    [[[child1]]]
+      order = 0
+      parent = child0
+      position = 800
+      ratio = 0.5
+      type = HPaned
+    [[[child3]]]
+      order = 1
+      parent = child1
+      position = 436
+      ratio = 0.5
+      type = VPaned
+    [[[terminal2]]]
+      directory = /home/martin/projects/activitywatch
+      command = '''bash --rcfile <(cat ${HOME}/.bashrc; echo 'export PROMPT_COMMAND="source activate venv; unset PROMPT_COMMAND"') -i'''
+      order = 0
+      parent = child1
+      profile = default
+      type = Terminal
+      uuid = e589e2ce-9ce7-4026-b774-6d097e2ce0b3
+    [[[terminal4]]]
+      order = 0
+      parent = child3
+      profile = default
+      type = Terminal
+      uuid = 80ad33c5-11e5-4f4c-a6b4-4956d8961e6d
+    [[[terminal5]]]
+      command = source /home/martin/projects/activitywatch/venv/bin/activate ; exec bash
+      order = 1
+      parent = child3
+      profile = default
+      type = Terminal
+      uuid = 24fd80a2-1753-4d27-a9ee-25bb39890d21
+  [[ll]]
+    [[[child0]]]
+      fullscreen = False
+      last_active_term = cf7c2973-c198-4439-967e-da05210be65b
+      last_active_window = True
+      maximised = False
+      order = 0
+      parent = ""
+      position = 0:411
+      size = 642, 382
+      title = martin@isaz: ~
+      type = Window
+    [[[terminal1]]]
+      command = ls ; bash
+      order = 0
+      parent = child0
+      profile = default
+      type = Terminal
+      uuid = cf7c2973-c198-4439-967e-da05210be65b
+[plugins]
