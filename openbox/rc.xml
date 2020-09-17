@@ -532,12 +532,12 @@
     </keybind>
     <keybind key="C-Up">
       <action name="Execute">
-        <command>amixer set Master 3%+</command>
+        <command>amixer set Master 2%+</command>
       </action>
     </keybind>
     <keybind key="C-Down">
       <action name="Execute">
-        <command>amixer set Master 3%-</command>
+        <command>amixer set Master 2%-</command>
       </action>
     </keybind>
     <keybind key="C-Right">
