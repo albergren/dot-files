@@ -191,37 +191,16 @@
 
 (setq org-capture-templates
       '(("t" "Todo" entry (file+headline "~/notes/20200502181918-todo.org" "Tasks")
-         "** TODO %?\n  %i\n\n")
+         "** TODO %?\n  %U\n   %i\n\n")
         ("i" "idea or thought" entry (file+headline "~/notes/20200502185404-ideas.org" "Ideas and thoughts")
          "** %?\nEntered on %U\n  %i\n\n")
         ("j" "Journal" entry (file+datetree "~/notes/20200502184830-journal_2020.org")
-         "* %?\nEntered on %U\n  %i\n\n")))
+         "* %?\n\tEntered on %U\n  %i\n\n")))
          
 (global-set-key (kbd "C-c c") 'org-capture)
 ;; ---------------------------------------------
 ;; |	org-roam 	    			           |
 ;; ---------------------------------------------
-
-(use-package org-roam
-      :hook
-      (after-init . org-roam-mode)
-      :custom
-      (org-roam-directory "/home/martin/notes/")
-      :bind (:map org-roam-mode-map
-              (("C-c n l" . org-roam)
-               ("C-c n f" . org-roam-find-file)
-               ("C-c n b" . org-roam-switch-to-buffer)
-               ("C-c n c" . org-roam-capture)
-               ("C-c n g" . org-roam-graph)
-			   ("C-c n j" . org-roam-jump-to-index))
-
-              :map org-mode-map
-              (("C-c n i" . org-roam-insert))))
-
-(setq org-roam-index-file "/home/martin/notes/index.org")
-
-
-
 
 ;; deft to index
 (setq deft-extensions '("txt" "tex" "org"))
@@ -262,22 +241,47 @@
 
 ;; layout definition
 (defun roam-layout (switch)
-(desktop-clear)
 (desktop-save-mode 0)
-(interactive)
+(global-auto-revert-mode 0)
+(use-package org-roam
+      :hook
+      (after-init . org-roam-mode)
+      :custom
+      (org-roam-directory "/home/martin/notes/")
+      :bind (:map org-roam-mode-map
+              (("C-c n l" . org-roam)
+               ("C-c n f" . org-roam-find-file)
+               ("C-c n b" . org-roam-switch-to-buffer)
+               ("C-c n c" . org-roam-capture)
+               ("C-c n g" . org-roam-graph)
+			   ("C-c n j" . org-roam-jump-to-index))
+
+              :map org-mode-map
+              (("C-c n i" . org-roam-insert))))
+
+(setq org-roam-index-file "/home/martin/notes/index.org")
+	(desktop-clear)
+	(desktop-save-mode 0)
+	(interactive)
 
 
-(setq inhibit-startup-screen t)
-(delete-other-windows)
-(deft)
+	(setq inhibit-startup-screen t)
+	(delete-other-windows)
+	(deft)
 
-(org-roam-mode)
-(org-roam-buffer-toggle-display)
-(next-multiframe-window)
-(enlarge-window-horizontally ( - 35 (window-body-width)))
-(previous-multiframe-window)
+	(org-roam-mode)
+	(org-roam-buffer-toggle-display)
+	                                                                                                                                                                                                
+	(setq org-image-actual-width nil)
+	(next-multiframe-window)
+	(enlarge-window-horizontally ( - 35 (window-body-width)))
+	(previous-multiframe-window)
 )
 
 (add-to-list 'command-switch-alist '("-roam" . roam-layout))
+
+
+
+
 
 
