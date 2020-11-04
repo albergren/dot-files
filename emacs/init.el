@@ -281,7 +281,28 @@
 (add-to-list 'command-switch-alist '("-roam" . roam-layout))
 
 
-
-
-
+(defun xfun()
+  (interactive)
+  (let ((fileName)
+        (newDirName)
+		(dirName))
+  )
+  
+  ;; get name of current file
+  (setq fileName (file-name-sans-extension
+				 (file-name-nondirectory 
+			     (buffer-file-name)))) 
+  (setq fileName (concat fileName "/"))
+  (setq dirName (file-name-directory (buffer-file-name)))
+  
+  ;; make new directory with same name as file
+  (setq newDir (concat "img/" fileName))
+  (setq dest (concat dirName newDir))
+  (if (not (file-directory-p newDir))
+    (make-directory dest t))
+  (setq url (read-string "Enter url:"))
+  (setq downloadFile (concat dest (file-name-nondirectory url)))
+  (insert downloadFile)
+  (url-copy-file url downloadFile) 
+)
 
