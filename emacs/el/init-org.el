@@ -23,6 +23,8 @@
 
 ;; layout definition
 (defun roam-layout (switch)
+(setq-default frame-title-format '("Emacs-Roam"))
+
 (desktop-save-mode 0)
 (global-auto-revert-mode 0)
 (use-package org-roam
@@ -60,10 +62,30 @@
 	(previous-multiframe-window)
 )
 
+(defun download-inline-image()
+    (interactive)
+
+  (setq fileName (download-from-url))
+    (insert "#+ATTR_ORG: :width 500")
+  (newline)
+  (insert "[[" )
+  (insert fileName)
+  (insert "]]")
+  )
+
+(defun download-document()
+    (interactive)
+
+  (setq fileName (download-from-url))
+  (insert "[[" )
+  (insert fileName)
+  (insert "][]]")
+  (backward-char 2)
+  )
 
 
-(defun xfun()
-  (interactive)
+
+(defun download-from-url()
   (let ((fileName)
         (newDirName)
 		(dirName))
@@ -76,15 +98,19 @@
   (setq fileName (concat fileName "/"))
   (setq dirName (file-name-directory (buffer-file-name)))
   
-  ;; make new directory with same name as file
+  ;; make new directory with same name as current file and make new dir
+  ;; if it does not exist
   (setq newDir (concat "files/" fileName))
   (setq dest (concat dirName newDir))
   (if (not (file-directory-p newDir))
     (make-directory dest t))
   (setq url (read-string "Enter url:"))
   (setq downloadFile (concat dest (file-name-nondirectory url)))
-  (insert downloadFile)
   (url-copy-file url downloadFile) 
+  downloadFile
+  
+
+
 )
 
 (provide 'init-org)
