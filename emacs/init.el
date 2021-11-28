@@ -148,7 +148,7 @@
  '(org-variable-pitch-face ((t (:height 1.0 :family "IM Fell English"))))
  '(variable-pitch ((t (:height 1.0 :family "IM Fell English"))))
  '(whitespace-line ((t (:background "gray32")))))
- 
+
 
 
 

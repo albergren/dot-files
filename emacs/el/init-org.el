@@ -4,6 +4,8 @@
 ;; ---------------------------------------------
 ;; |	org-mode 						       |
 ;; ---------------------------------------------
+(require 'org)
+(setq org-format-latex-options (plist-put org-format-latex-options :scale 1.5))
 
 (defconst *my-date* "%m/%d/%y")
 (defun date-fun (d) (format-time-string *my-date* (time-subtract (current-time) (days-to-time d))))
@@ -21,28 +23,32 @@
 (setq deft-directory notes-dir)
 
 
+
+
 ;; layout definition
 (defun roam-layout (switch)
 (setq-default frame-title-format '("Emacs-Roam"))
 
 (desktop-save-mode 0)
 (global-auto-revert-mode 0)
+
 (use-package org-roam
-      :hook
-      (after-init . org-roam-mode)
-      :custom
-      (org-roam-directory notes-dir)
-      :bind (:map org-roam-mode-map
-              (("C-c n l" . org-roam)
-               ("C-c n f" . org-roam-find-file)
-               ("C-c n b" . org-roam-switch-to-buffer)
-               ("C-c n c" . org-roam-capture)
-               ("C-c n g" . org-roam-graph)
-	       ("C-c n j" . org-roam-jump-to-index))
+  :ensure t
+  :custom
+  (org-roam-directory notes-dir)
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n f" . org-roam-node-find)
+         ("C-c n g" . org-roam-graph)
+         ("C-c n i" . org-roam-node-insert)
+         ("C-c n c" . org-roam-capture)
+         ;; Dailies
+         ("C-c n j" . org-roam-dailies-capture-today))
+  :config
+  (org-roam-db-autosync-mode)
+)
 
-              :map org-mode-map
-              (("C-c n i" . org-roam-insert))))
 
+  
 (setq org-roam-index-file (concat notes-dir roam-index-file))
 	(desktop-clear)
 	(desktop-save-mode 0)
@@ -53,13 +59,15 @@
 	(delete-other-windows)
 	(deft)
 
-	(org-roam-mode)
-	(org-roam-buffer-toggle-display)
+	;;(org-roam-mode)
+	(org-roam-buffer-toggle)
 	                                                                                                                                                                                                
 	(setq org-image-actual-width nil)
 	(next-multiframe-window)
-	(enlarge-window-horizontally ( - 35 (window-body-width)))
+	(enlarge-window-horizontally ( - (  / (window-body-width)  3) (window-body-width)))
+	(set-window-dedicated-p (selected-window) t)
 	(previous-multiframe-window)
+
 )
 
 (defun download-inline-image()
@@ -112,5 +120,23 @@
 
 
 )
+
+;; Set deft to ignore properties tags
+(defun cm/deft-parse-title (file contents)
+    (let ((begin (string-match "^#\\+[tT][iI][tT][lL][eE]: .*$" contents)))
+	  (if begin
+		(string-trim (substring contents begin (match-end 0)) "#\\+[tT][iI][tT][lL][eE]: *" "[\n\t ]+")
+	   (deft-base-filename file))))
+  
+    (advice-add 'deft-parse-title :override #'cm/deft-parse-title)
+  
+    (setq deft-strip-summary-regexp
+	  (concat "\\("
+		  "[\n\t]" ;; blank
+		  "\\|^#\\+[[:alpha:]_]+:.*$" ;; org-mode metadata
+		  "\\|^:PROPERTIES:\n\\(.+\n\\)+:END:\n"
+		  "\\)"))
+
+(setq deft-file-limit 70)
 
 (provide 'init-org)
