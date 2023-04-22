@@ -64,7 +64,9 @@
 	                                                                                                                                                                                                
 	(setq org-image-actual-width nil)
 	(next-multiframe-window)
-	(enlarge-window-horizontally ( - (  / (window-body-width)  3) (window-body-width)))
+	;;(enlarge-window-horizontally ( - (  / (window-body-width)  3) (window-body-width)))
+	(enlarge-window ( - (  / (window-body-height)  3) (window-body-height)))
+
 	(set-window-dedicated-p (selected-window) t)
 	(previous-multiframe-window)
 
@@ -135,6 +137,7 @@
 		  "[\n\t]" ;; blank
 		  "\\|^#\\+[[:alpha:]_]+:.*$" ;; org-mode metadata
 		  "\\|^:PROPERTIES:\n\\(.+\n\\)+:END:\n"
+		  "\\|^- tags ::"
 		  "\\)"))
 
 (setq deft-file-limit 70)
