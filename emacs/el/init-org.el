@@ -22,7 +22,8 @@
 (setq deft-extensions '("txt" "tex" "org"))
 (setq deft-directory notes-dir)
 
-
+;; wrap lines
+(setq truncate-lines nil)
 
 
 ;; layout definition
@@ -47,7 +48,18 @@
   (org-roam-db-autosync-mode)
 )
 
+(defun set-roam-buffer ()
+		(org-roam-buffer-toggle)
+	                                                                                                                                                                                                
+	(setq org-image-actual-width nil)
+	(next-multiframe-window)
+	(enlarge-window ( - (  / (window-body-height)  3) (window-body-height)))
 
+	(set-window-dedicated-p (selected-window) t)
+	(setq my-buffer (get-buffer "*org-roam*"))
+	(setq-default buffer-invisibility-spec (cons my-buffer 'no-other-window))
+	(previous-multiframe-window)
+)
   
 (setq org-roam-index-file (concat notes-dir roam-index-file))
 	(desktop-clear)
@@ -60,15 +72,7 @@
 	(deft)
 
 	;;(org-roam-mode)
-	(org-roam-buffer-toggle)
-	                                                                                                                                                                                                
-	(setq org-image-actual-width nil)
-	(next-multiframe-window)
-	;;(enlarge-window-horizontally ( - (  / (window-body-width)  3) (window-body-width)))
-	(enlarge-window ( - (  / (window-body-height)  3) (window-body-height)))
-
-	(set-window-dedicated-p (selected-window) t)
-	(previous-multiframe-window)
+(set-roam-buffer)
 
 )
 
@@ -141,5 +145,59 @@
 		  "\\)"))
 
 (setq deft-file-limit 70)
+
+;;----------------------------------;;
+;;  Change buffer layout on resize  ;;
+;;----------------------------------;;
+
+(defvar my-previous-frame-width nil)
+(setq my-previous-frame-width 133) ;; find way to get width
+
+(defun check-frame-size-change ()
+  "Function to check if the frame size has changed."
+  (let ((current-width (frame-width)))
+    (unless  (= current-width my-previous-frame-width)
+      (setq my-previous-frame-width current-width)
+		t)))
+
+
+(defun my-adjust-window-layout (window)
+  "Adjust window layout based on frame width."
+  (if (check-frame-size-change)
+		(let ((frame-width (frame-width)))
+		;; Set window layout based on frame width
+		(cond
+			((> frame-width 135) ;; find better way to get width
+			;; set split window layout
+			(let ((buffer (get-buffer "*org-roam*"))) 
+				(let ((roam-window (get-buffer-window buffer)))
+					(if roam-window
+						(delete-window roam-window)
+						(message "No window found for buffer %s." buffer-name))))
+			  
+			(split-window-horizontally)
+			(window-resize (selected-window) (- 115 (window-width)) t) ;; find better way to get width
+			(other-window 1)
+			  
+			(split-window-horizontally)
+			(window-resize (selected-window) (- 115 (window-width)) t)
+			
+			(other-window 1)	
+			(set-window-buffer (selected-window) "*org-roam*")
+			(set-window-dedicated-p (selected-window) t)
+			(other-window 1)
+			(other-window 1)
+			(next-buffer)
+			)
+			 (t
+			  ;; Narrow layout with one window and roam buffer
+				(delete-window)
+				(other-window 1)
+				(delete-window)
+				(set-roam-buffer))))))
+
+
+
+(add-hook 'window-size-change-functions 'my-adjust-window-layout)
 
 (provide 'init-org)
